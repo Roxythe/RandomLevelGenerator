@@ -2,9 +2,11 @@
 #include "LevelGenerator.h"
 #include "FileExporter.h"
 #include "Visualizer.h"
+#include <ctime>
 
 int main()
 {
+	srand(static_cast<unsigned>(time(0))); // Seed generator with current time
 	LevelGenerator generator;
 
 	// Generate a level
