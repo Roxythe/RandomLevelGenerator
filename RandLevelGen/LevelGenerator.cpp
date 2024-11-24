@@ -1,17 +1,28 @@
 #include "LevelGenerator.h"
 #include <iostream>
+#include <random>
 
 void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 {
+	// Random engine seeded with current time
+	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
+
+	// Distributions
+	std::uniform_int_distribution<int> widthDist(3, 7); // Room width: 3-7
+	std::uniform_int_distribution<int> heightDist(3, 7); // Room height: 3-7
+	std::uniform_int_distribution<int> xDist(0, width - 1); // X position
+	std::uniform_int_distribution<int> yDist(0, height - 1); // Y position
+
 	grid = std::vector<std::vector<int>>(height, std::vector<int>(width, 0));
+	rooms.clear();
 
 	// Generate rooms
 	for (int i = 0; i < roomCount; ++i)
 	{
-		int roomWidth = std::min(rand() % 5 + 3, width);
-		int roomHeight = std::min(rand() % 5 + 3, height);
-		int roomX = rand() % (width - roomWidth);
-		int roomY = rand() % (height - roomHeight);
+		int roomWidth = widthDist(rng);
+		int roomHeight = heightDist(rng);
+		int roomX = xDist(rng) % (width - roomWidth + 1);
+		int roomY = yDist(rng) % (height - roomHeight + 1);
 
 		Room room(roomX, roomY, roomWidth, roomHeight);
 		if (CanPlaceRoom(room))

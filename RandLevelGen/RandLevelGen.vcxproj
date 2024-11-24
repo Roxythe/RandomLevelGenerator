@@ -133,14 +133,11 @@
     <ClCompile Include="FileExporter.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Random.cpp" />
-    <ClCompile Include="Room.cpp" />
     <ClCompile Include="Visualizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileExporter.h" />
     <ClInclude Include="LevelGenerator.h" />
-    <ClInclude Include="Random.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Visualizer.h" />
   </ItemGroup>
