@@ -10,7 +10,7 @@ int main()
 	LevelGenerator generator;
 
 	// Generate a level
-	generator.GenerateLevel(20, 20, 5); // Width 20, Height 20, 5 rooms
+	generator.GenerateLevel(30, 30, 10); // Width 30, Height 30, rooms 10
 	generator.PrintGrid(); // Print grid to verify
 
 	// Export the level
@@ -18,7 +18,7 @@ int main()
 	FileExporter::ExportToJson(generator.GetGrid(), "level.json");
 
 	// Visualize level
-	Visualizer visualizer(20, generator.GetGrid()); // 20x20 grid
+	Visualizer visualizer(30, generator.GetGrid()); // 20x20 grid
 	visualizer.Render();
 
 	std::cout << "Level generated and exported successfully!" << std::endl;

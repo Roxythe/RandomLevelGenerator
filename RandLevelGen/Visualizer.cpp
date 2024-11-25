@@ -33,6 +33,12 @@ void Visualizer::Render()
 					tile.setFillColor(sf::Color::Blue); // Room
 				else if (grid.at(y).at(x) == 3) 
 					tile.setFillColor(sf::Color::Green); // Corridor
+				else if (grid.at(y).at(x) == 4)
+					tile.setFillColor(sf::Color::Yellow); // Treasure chest
+				else if (grid.at(y).at(x) == 5)
+					tile.setFillColor(sf::Color::Cyan); // Trap
+				else if (grid.at(y).at(x) == 6)
+					tile.setFillColor(sf::Color::Red); // Enemy
 
 				window.draw(tile);
 			}

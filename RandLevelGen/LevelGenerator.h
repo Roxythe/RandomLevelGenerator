@@ -16,5 +16,6 @@ public:
 	void CreateCorridor(const Room& room1, const Room& room2);
 	bool CanPlaceRoom(const Room& room);
 	void PrintGrid() const;
+	void DecorateRoom(const Room& room);
 };
 
