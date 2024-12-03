@@ -130,15 +130,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Edge.cpp" />
     <ClCompile Include="FileExporter.cpp" />
+    <ClCompile Include="GraphUtils.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="UnionFind.cpp" />
     <ClCompile Include="Visualizer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Edge.h" />
     <ClInclude Include="FileExporter.h" />
+    <ClInclude Include="GraphUtils.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="UnionFind.h" />
     <ClInclude Include="Visualizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

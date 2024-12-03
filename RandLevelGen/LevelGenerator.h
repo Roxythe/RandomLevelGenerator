@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <random>
-#include "Room.h"
+#include "UnionFind.h"
 
 class LevelGenerator
 {
@@ -17,5 +17,8 @@ public:
 	bool CanPlaceRoom(const Room& room);
 	void PrintGrid() const;
 	void DecorateRoom(const Room& room);
+	void ConnectRooms(const std::vector<Edge>& _mst);
+	void AddExtraConnections(std::vector<Edge>& _edges, const std::vector<Edge>& _mst, int extraConnections,
+		const std::vector<Room>& _rooms);
 };
 

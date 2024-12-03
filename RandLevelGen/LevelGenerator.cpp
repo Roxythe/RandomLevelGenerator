@@ -1,6 +1,7 @@
 #include "LevelGenerator.h"
 #include <iostream>
 #include <random>
+#include "GraphUtils.h"
 
 void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 {
@@ -33,11 +34,10 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 		}
 	}
 
-	// Connect rooms
-	for (size_t i = 1; i < rooms.size(); ++i)
-	{
-		CreateCorridor(rooms[i - 1], rooms[i]);
-	}
+	std::vector<Edge> _edges = GenerateEdges(rooms); // Generate edges between rooms
+	std::vector<Edge> _mst = GenerateMST(_edges, rooms.size()); // Generate MST
+	ConnectRooms(_mst); // Connect rooms
+	AddExtraConnections(_edges, _mst, 2, rooms); // Add 2 extra connections between rooms
 }
 
 const std::vector<std::vector<int>>& LevelGenerator::GetGrid() const
@@ -86,7 +86,7 @@ bool LevelGenerator::CanPlaceRoom(const Room& room)
 		return false; // Out of bounds
 	}
 
-	// Check for collisons within room area and its buffer zone
+	// Check for collisions within room area and its buffer zone
 	for (int y = room.y - 1; y < room.y + room.height; ++y)
 	{
 		for (int x = room.x - 1; x < room.x + room.width; ++x)
@@ -153,6 +153,34 @@ void LevelGenerator::DecorateRoom(const Room& room)
 					}
 				}
 			}
+		}
+	}
+}
+
+void LevelGenerator::ConnectRooms(const std::vector<Edge>& _mst)
+{
+	for (const auto& edge : _mst)
+	{
+		const Room& room1 = rooms[edge.room1];
+		const Room& room2 = rooms[edge.room2];
+		CreateCorridor(room1, room2);
+	}
+}
+
+void LevelGenerator::AddExtraConnections(std::vector<Edge>& _edges, const std::vector<Edge>& _mst, int extraConnections,
+	const std::vector<Room>& _rooms)
+{
+	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
+	std::shuffle(_edges.begin(), _edges.end(), rng);
+
+	int added = 0;
+	for (const auto& edge : _edges)
+	{
+		if (std::find(_mst.begin(), _mst.end(), edge) == _mst.end()) // Skip edges already in MST
+		{
+			CreateCorridor(rooms[edge.room1], _rooms[edge.room2]);
+			added++;
+			if (added == extraConnections) break;
 		}
 	}
 }
