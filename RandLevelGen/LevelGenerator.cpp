@@ -7,6 +7,7 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 {
 	// Random engine seeded with current time
 	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
+	std::uniform_int_distribution<int> biomeDist(1, 3); // Biomes
 
 	// Distributions
 	std::uniform_int_distribution<int> widthDist(3, 7); // Room width: 3-7
@@ -15,6 +16,7 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 	std::uniform_int_distribution<int> yDist(0, height - 1); // Y position
 
 	grid = std::vector<std::vector<int>>(height, std::vector<int>(width, 0));
+	decorationGrid = std::vector<std::vector<int>>(height, std::vector<int>(width, 0));
 	rooms.clear();
 
 	// Generate rooms
@@ -24,8 +26,9 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 		int roomHeight = heightDist(rng);
 		int roomX = xDist(rng) % (width - roomWidth + 1);
 		int roomY = yDist(rng) % (height - roomHeight + 1);
+		int roomBiome = biomeDist(rng); // Assign random biome
 
-		Room room(roomX, roomY, roomWidth, roomHeight);
+		Room room(roomX, roomY, roomWidth, roomHeight, roomBiome);
 		if (CanPlaceRoom(room))
 		{
 			PlaceRoom(room);
@@ -45,13 +48,18 @@ const std::vector<std::vector<int>>& LevelGenerator::GetGrid() const
 	return grid;
 }
 
+const std::vector<std::vector<int>>& LevelGenerator::GetDecorationGrid() const
+{
+	return decorationGrid;
+}
+
 void LevelGenerator::PlaceRoom(const Room& room)
 {
 	for (int y = room.y; y < room.y + room.height; ++y)
 	{
 		for (int x = room.x; x < room.x + room.width; ++x)
 		{
-			grid.at(y).at(x) += 2; // Mark as a room
+			grid.at(y).at(x) += room.biome + 10; // Mark as a room
 		}
 	}
 }
@@ -125,14 +133,14 @@ void LevelGenerator::DecorateRoom(const Room& room)
 	{
 		for (int x = room.x; x < room.x + room.width; ++x)
 		{
-			if (grid.at(y).at(x) == 2 && decorationCount < maxDecorations) // Only decorate inside rooms
+			if (grid.at(y).at(x) >= 11 && grid.at(y).at(x) <= 13 && decorationCount < maxDecorations) // Only decorate inside biomes
 			{
 				if (!chestPlaced && (x == room.x || x == room.x + room.width - 1 || // Vertical walls
 					y == room.y || y == room.y + room.height - 1)) // Horizontal walls
 				{
 					if (decorationDist(rng) < 2)
 					{
-						grid.at(y).at(x) = 4; // Place a chest
+						decorationGrid.at(y).at(x) = 4; // Place a chest
 						chestPlaced = true;
 						decorationCount++;
 						continue; // Skip to next tile
@@ -143,12 +151,12 @@ void LevelGenerator::DecorateRoom(const Room& room)
 					int randomValue = decorationDist(rng);
 					if (randomValue < 3)
 					{
-						grid.at(y).at(x) = 5; // Place a trap
+						decorationGrid.at(y).at(x) = 5; // Place a trap
 						decorationCount++;
 					}
 					else if (randomValue < 15)
 					{
-						grid.at(y).at(x) = 6; // Place an enemy
+						decorationGrid.at(y).at(x) = 6; // Place an enemy
 						decorationCount++;
 					}
 				}

@@ -1,7 +1,7 @@
 #include "Visualizer.h"
 
-Visualizer::Visualizer(int tileSize, const std::vector<std::vector<int>>& grid)
-	: tileSize(tileSize), grid(grid) {}
+Visualizer::Visualizer(int tileSize, const std::vector<std::vector<int>>& grid, const std::vector<std::vector<int>>& decorationGrid)
+	: tileSize(tileSize), grid(grid), decorationGrid(decorationGrid) {}
 
 void Visualizer::Render()
 {
@@ -26,18 +26,29 @@ void Visualizer::Render()
 				sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
 				tile.setPosition(x * tileSize, y * tileSize);
 
-				// Color based on cell value
+				// Color basic frame based on cell value
 				if (grid.at(y).at(x) == 0)
 					tile.setFillColor(sf::Color::Black); // Empty
 				else if (grid.at(y).at(x) == 2) 
 					tile.setFillColor(sf::Color::Blue); // Room
 				else if (grid.at(y).at(x) == 3) 
 					tile.setFillColor(sf::Color::Green); // Corridor
-				else if (grid.at(y).at(x) == 4)
+				// Color room biomes
+				else if (grid.at(y).at(x) == 11)
+					tile.setFillColor(sf::Color(54, 100, 54)); // Forest biome/Forest green
+				else if (grid.at(y).at(x) == 12)
+					tile.setFillColor(sf::Color(105, 105, 105)); // Cave biome/Gray
+				else if (grid.at(y).at(x) == 13)
+					tile.setFillColor(sf::Color(70, 130, 180)); // Water biome/Steel blue
+
+				window.draw(tile);
+
+				// Color decoration grid
+				if (decorationGrid.at(y).at(x) == 4)
 					tile.setFillColor(sf::Color::Yellow); // Treasure chest
-				else if (grid.at(y).at(x) == 5)
+				else if (decorationGrid.at(y).at(x) == 5)
 					tile.setFillColor(sf::Color::Cyan); // Trap
-				else if (grid.at(y).at(x) == 6)
+				else if (decorationGrid.at(y).at(x) == 6)
 					tile.setFillColor(sf::Color::Red); // Enemy
 
 				window.draw(tile);

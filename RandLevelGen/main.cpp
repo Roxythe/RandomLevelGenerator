@@ -18,7 +18,7 @@ int main()
 	FileExporter::ExportToJson(generator.GetGrid(), "level.json");
 
 	// Visualize level
-	Visualizer visualizer(30, generator.GetGrid()); // 20x20 grid
+	Visualizer visualizer(30, generator.GetGrid(), generator.GetDecorationGrid()); // 20x20 grid
 	visualizer.Render();
 
 	std::cout << "Level generated and exported successfully!" << std::endl;
