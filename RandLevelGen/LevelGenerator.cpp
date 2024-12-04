@@ -41,6 +41,7 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 	std::vector<Edge> _mst = GenerateMST(_edges, rooms.size()); // Generate MST
 	ConnectRooms(_mst); // Connect rooms
 	AddExtraConnections(_edges, _mst, 2, rooms); // Add 2 extra connections between rooms
+	PlaceSpawnAndEndPoints();
 }
 
 const std::vector<std::vector<int>>& LevelGenerator::GetGrid() const
@@ -51,6 +52,58 @@ const std::vector<std::vector<int>>& LevelGenerator::GetGrid() const
 const std::vector<std::vector<int>>& LevelGenerator::GetDecorationGrid() const
 {
 	return decorationGrid;
+}
+
+const std::pair<int, int>& LevelGenerator::GetSpawnPoint() const
+{
+	return spawnPoint;
+}
+
+const std::pair<int, int>& LevelGenerator::GetEndPoint() const
+{
+	return endPoint;
+}
+
+void LevelGenerator::PlaceSpawnAndEndPoints()
+{
+	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
+	std::uniform_int_distribution<int> roomDist(0, rooms.size() - 1);
+
+	// Randomly chosen spawn room
+	int spawnRoomIndex = roomDist(rng);
+	const Room& spawnRoom = rooms[spawnRoomIndex];
+
+	// Choose a random tile within spawn room
+	std::uniform_int_distribution<int> xDist(spawnRoom.x, spawnRoom.x + spawnRoom.width - 1);
+	std::uniform_int_distribution<int> yDist(spawnRoom.y, spawnRoom.y + spawnRoom.height - 1);
+	spawnPoint = { xDist(rng), yDist(rng) };
+	grid[spawnPoint.second][spawnPoint.first] = 7; // Mark as spawn point
+
+	// Choose a different random room for end point
+	int endRoomIndex;
+	const Room* endRoom = nullptr;
+	int minDistance = 30;
+
+	do 
+	{
+		endRoomIndex = roomDist(rng); 
+		
+		// Ensure end room is different from spawn room
+		if (endRoomIndex != spawnRoomIndex)
+		{
+			endRoom = &rooms[endRoomIndex];
+			xDist = std::uniform_int_distribution<int>(endRoom->x, endRoom->x + endRoom->width - 1);
+			yDist = std::uniform_int_distribution<int>(endRoom->y, endRoom->y + endRoom->height - 1);
+			endPoint = { xDist(rng), yDist(rng) };
+		}
+	} 
+	while (endRoomIndex == spawnRoomIndex || // Ensure different rooms
+		std::abs(spawnPoint.first - endPoint.first) + std::abs(spawnPoint.second - endPoint.second) < minDistance);
+
+	grid[endPoint.second][endPoint.first] = 8; // Mark as end point
+
+	std::cout << "Spawn Point: (" << spawnPoint.first << ", " << spawnPoint.second << ")\n";
+	std::cout << "End Point: (" << endPoint.first << ", " << endPoint.second << ")\n";
 }
 
 void LevelGenerator::PlaceRoom(const Room& room)
