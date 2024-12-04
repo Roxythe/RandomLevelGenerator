@@ -7,7 +7,7 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 {
 	// Random engine seeded with current time
 	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
-	std::uniform_int_distribution<int> biomeDist(1, 3); // Biomes
+	std::uniform_int_distribution<int> biomeDist(1, 4); // Biomes
 
 	// Distributions
 	std::uniform_int_distribution<int> widthDist(3, 7); // Room width: 3-7
@@ -72,7 +72,7 @@ void LevelGenerator::PlaceSpawnAndEndPoints()
 	// Randomly chosen spawn room
 	int spawnRoomIndex = roomDist(rng);
 	const Room& spawnRoom = rooms[spawnRoomIndex];
-
+	
 	// Choose a random tile within spawn room
 	std::uniform_int_distribution<int> xDist(spawnRoom.x, spawnRoom.x + spawnRoom.width - 1);
 	std::uniform_int_distribution<int> yDist(spawnRoom.y, spawnRoom.y + spawnRoom.height - 1);
@@ -186,7 +186,7 @@ void LevelGenerator::DecorateRoom(const Room& room)
 	{
 		for (int x = room.x; x < room.x + room.width; ++x)
 		{
-			if (grid.at(y).at(x) >= 11 && grid.at(y).at(x) <= 13 && decorationCount < maxDecorations) // Only decorate inside biomes
+			if (grid.at(y).at(x) >= 11 && grid.at(y).at(x) <= 14 && decorationCount < maxDecorations) // Only decorate inside biomes
 			{
 				if (!chestPlaced && (x == room.x || x == room.x + room.width - 1 || // Vertical walls
 					y == room.y || y == room.y + room.height - 1)) // Horizontal walls

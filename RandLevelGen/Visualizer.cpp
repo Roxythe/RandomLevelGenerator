@@ -1,11 +1,18 @@
 #include "Visualizer.h"
+#include <iostream>
 
 Visualizer::Visualizer(int tileSize, const std::vector<std::vector<int>>& grid, const std::vector<std::vector<int>>& decorationGrid)
 	: tileSize(tileSize), grid(grid), decorationGrid(decorationGrid) {}
 
 void Visualizer::Render()
 {
-	sf::RenderWindow window(sf::VideoMode(grid[0].size() * tileSize, grid.size() * tileSize), "Level Visualizer");
+	sf::RenderWindow window(sf::VideoMode(grid[0].size() * tileSize + 200, grid.size() * tileSize), "Level Visualizer");
+	sf::Font font;
+	if (!font.loadFromFile("arial.ttf"))
+	{
+		std::cerr << "Error loading font!\n";
+		return;
+	}
 
 	while (window.isOpen())
 	{
@@ -41,9 +48,11 @@ void Visualizer::Render()
 				else if (grid.at(y).at(x) == 11) // Forest biome
 					tile.setFillColor(sf::Color(54, 100, 54)); // Forest green
 				else if (grid.at(y).at(x) == 12) // Cave biome
-					tile.setFillColor(sf::Color(105, 105, 105)); // Gray
+					tile.setFillColor(sf::Color(105, 105, 105)); // Dark Gray
 				else if (grid.at(y).at(x) == 13) // Water biome
 					tile.setFillColor(sf::Color(70, 130, 180)); // Steel blue
+				else if (grid.at(y).at(x) == 14) // Desert biome
+					tile.setFillColor(sf::Color(170, 170, 30)); // Sandy Yellow
 
 				window.draw(tile);
 			}
@@ -75,6 +84,31 @@ void Visualizer::Render()
 					window.draw(tile);
 				}
 			}
+		}
+
+		// Draw Legend
+		float legendX = grid[0].size() * tileSize + 20; // Position legend to the right of grid
+		float legendY = 20;
+
+		for (const auto& key : legend)
+		{
+			const sf::Color& color = key.first;
+			const std::string& description = key.second;
+
+			// Draw colored tile in legend
+			sf::RectangleShape legendTile(sf::Vector2f(tileSize, tileSize));
+			legendTile.setFillColor(color);
+			legendTile.setPosition(legendX, legendY);
+			window.draw(legendTile);
+
+			// Draw description
+			sf::Text text(description, font, 16);
+			text.setPosition(legendX + tileSize + 10, legendY);
+			text.setFillColor(sf::Color::White);
+			window.draw(text);
+
+			// Move to next legend item
+			legendY += tileSize + 10;
 		}
 
 		window.display();
