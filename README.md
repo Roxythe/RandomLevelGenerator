@@ -1,5 +1,11 @@
 # Random Level Generator
 
+## Media
+
+[Random Level Generator App Demo](https://youtu.be/iyXms6ZvKIk): Short showcase demo of my Random Level Generator app.
+
+## Description
+
 This project is a Random Level Generator designed to procedurally generate dungeon-like maps with various features such as rooms, corridors, biomes, decorations, and interactable elements. It includes a visualizer for rendering the levels and a settings menu for customizing generation parameters.
 Features
 
@@ -62,7 +68,7 @@ The visualizer includes a legend that explains what each color in the grid repre
     R: Regenerate the level.
 
 ## Development Details
-## Files and Code Structure
+### Files and Code Structure
 
     LevelGenerator:
         Responsible for generating rooms, corridors, biomes, and decorations.
@@ -74,16 +80,16 @@ The visualizer includes a legend that explains what each color in the grid repre
     Event Handling:
         Manages user interactions for key presses and mouse clicks.
 
-## Dependencies
+### Dependencies
 
     SFML: Used for rendering and event handling.
 
-## Known Issues
+### Known Issues
 
     Interactions with sliders can sometimes require precise mouse clicks.
     If the font file (arial.ttf) is missing, the application may not render text properly.
 
-## Future Enhancements
+### Future Enhancements
 
     Add more biomes and decorations.
     Support saving and loading levels.
