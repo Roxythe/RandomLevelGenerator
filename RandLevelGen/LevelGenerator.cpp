@@ -3,7 +3,7 @@
 #include <random>
 #include "GraphUtils.h"
 
-void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
+void LevelGenerator::GenerateLevel(int width, int height, int roomCount, int enemyDensity)
 {
 	// Random engine seeded with current time
 	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
@@ -32,7 +32,7 @@ void LevelGenerator::GenerateLevel(int width, int height, int roomCount)
 		if (CanPlaceRoom(room))
 		{
 			PlaceRoom(room);
-			DecorateRoom(room);
+			DecorateRoom(room, enemyDensity);
 			rooms.push_back(room);
 		}
 	}
@@ -173,10 +173,11 @@ void LevelGenerator::PrintGrid() const
 	}
 }
 
-void LevelGenerator::DecorateRoom(const Room& room)
+void LevelGenerator::DecorateRoom(const Room& room, int enemyDensity)
 {
 	std::mt19937 rng(static_cast<unsigned>(std::time(0)));
 	std::uniform_int_distribution<int> decorationDist(0, 20); // 0-10 scale for density
+	std::uniform_int_distribution<int> enemyDist(0, 100);     // Enemy chance based on density
 
 	int maxDecorations = (room.width * room.height) / 4; // Allow decoration in 1/4 of room tiles
 	int decorationCount = 0; // Track decoration count
@@ -202,12 +203,12 @@ void LevelGenerator::DecorateRoom(const Room& room)
 				else
 				{
 					int randomValue = decorationDist(rng);
-					if (randomValue < 3)
+					if (randomValue < 3) // Place trap
 					{
 						decorationGrid.at(y).at(x) = 5; // Place a trap
 						decorationCount++;
 					}
-					else if (randomValue < 15)
+					else if (enemyDist(rng) < enemyDensity * 10)
 					{
 						decorationGrid.at(y).at(x) = 6; // Place an enemy
 						decorationCount++;

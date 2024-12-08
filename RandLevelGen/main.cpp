@@ -10,7 +10,7 @@ int main()
 	LevelGenerator generator;
 
 	// Generate a level
-	generator.GenerateLevel(80, 40, 10); // Width 30, Height 30, rooms 10 max
+	generator.GenerateLevel(80, 40, 10, 5); // Width 30, Height 30, rooms 10 max, enemy density 5
 	generator.PrintGrid(); // Print grid to verify
 
 	// Export the level
